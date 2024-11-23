@@ -1,0 +1,35 @@
+base:
+  path:
+    data: data/
+    models: model/
+    output: output/
+  params:
+    random_seed: 42
+
+data:
+  raw_file: data/raw/data.csv
+  processed_file: data/processed/processed.csv
+  features:
+    numeric:
+      - feature1
+      - feature2
+    categorical:
+      - feature3
+      - feature4
+
+model:
+  type: "random_forest"
+  parameters:
+    n_estimators: 100
+    max_depth: 10
+  cv_folds: 5
+  scoring: "roc_auc"
+
+mlflow:
+  tracking_uri: "sqlite:///mlflow.db"
+  experiment_name: "default"
+
+visualization:
+  style: "whitegrid"
+  figure_size: [10, 6]
+  font_size: 12 
