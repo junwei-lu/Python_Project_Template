@@ -4,7 +4,7 @@ GITHUB_USER = your-github-username
 BRANCH = main
 
 # Virtual environment settings
-VENV_METHOD = uv  # Change this to 'poetry', 'conda', or 'uv' as needed
+VENV_METHOD = venv  # Change this to 'poetry', 'conda', or 'uv' as needed
 VENV_NAME = venv
 PYTHON = python
 VENV_BIN := $(VENV_NAME)/bin
