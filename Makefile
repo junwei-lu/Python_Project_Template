@@ -132,13 +132,13 @@ lock:
 activate:
 	@echo "To activate the virtual environment, run:"
 	@if [ "$(strip $(VENV_METHOD))" = "venv" ]; then \
-		source $(VENV_NAME)/bin/activate; \
+		@echo "source $(VENV_NAME)/bin/activate"; \
 	elif [ "$(strip $(VENV_METHOD))" = "poetry" ]; then \
 		poetry shell; \
 	elif [ "$(strip $(VENV_METHOD))" = "conda" ]; then \
 		$(CONDA_ACTIVATE) && conda activate $(VENV_NAME); \
 	elif [ "$(strip $(VENV_METHOD))" = "uv" ]; then \
-		source $(VENV_NAME)/bin/activate; \
+		@echo "source $(VENV_NAME)/bin/activate"; \
 	fi
 
 # Show deactivation command
@@ -222,28 +222,6 @@ init_config:
 	$(VENV_PIP) install python-box pyyaml
 	@echo "Configuration structure created!"
 
-# Install development tools
-dev-install:
-	@echo "Installing development packages..."
-	$(VENV_PIP) install pytest pytest-cov black flake8 mypy
-
-# Format code using black
-format:
-	@echo "Formatting code with black..."
-	$(VENV_BIN)/black .
-
-# Run code quality checks
-lint:
-	@echo "Running flake8..."
-	$(VENV_BIN)/flake8 .
-	@echo "Running mypy..."
-	$(VENV_BIN)/mypy .
-
-# Run tests with coverage
-test:
-	@echo "Running tests with pytest..."
-	$(VENV_BIN)/pytest --cov=.
-
 # Display available commands
 help:
 	@echo "Available commands:"
@@ -255,30 +233,4 @@ help:
 	@echo "  make deactivate    - Show command to deactivate virtual environment"
 	@echo "  make list-packages - List all installed packages"
 	@echo "  make clean         - Remove virtual environment and cache files"
-	@echo "  make dev-install   - Install development packages"
-	@echo "  make format        - Format code with black"
-	@echo "  make lint          - Run linting tools"
-	@echo "  make test          - Run tests with coverage"
-	@echo "  make init_config   - Initialize configuration structure"
-
-# Add sandbox directory to init_project_structure
-init_project_structure:
-	@echo "Creating project directory structure..."
-	mkdir -p data/{raw,processed,external}
-	mkdir -p src/{data,features,models,visualization}
-	mkdir -p notebooks
-	mkdir -p reports/figures
-	mkdir -p config
-	mkdir -p sandbox
-	touch data/raw/.gitkeep
-	touch data/processed/.gitkeep
-	touch data/external/.gitkeep
-	touch src/data/.gitkeep
-	touch src/features/.gitkeep
-	touch src/models/.gitkeep
-	touch src/visualization/.gitkeep
-	touch notebooks/.gitkeep
-	touch reports/figures/.gitkeep
-	touch config/.gitkeep
-	touch sandbox/.gitkeep
 
