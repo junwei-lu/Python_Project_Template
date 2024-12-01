@@ -1,5 +1,6 @@
 base:
   path:
+    raw_data: raw_data/
     data: data/
     models: model/
     output: output/
@@ -7,22 +8,15 @@ base:
     random_seed: 42
 
 data:
-  raw_file: data/raw/data.csv
-  processed_file: data/processed/processed.csv
-  features:
-    numeric:
-      - feature1
-      - feature2
-    categorical:
-      - feature3
-      - feature4
+  raw_data: raw_data/data.csv
+  processed_data: data/boston.csv
 
 model:
   type: "random_forest"
   parameters:
     n_estimators: 100
     max_depth: 10
-  cv_folds: 5
+  test_size: 0.2
   scoring: "roc_auc"
 
 mlflow:

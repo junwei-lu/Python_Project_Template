@@ -1,7 +1,10 @@
 # Github variables
-REPO_NAME = your-repo-name
-GITHUB_USER = your-github-username
+REPO_NAME = Python-Project-Boston-Housing
+GITHUB_USER = junwei-lu
 BRANCH = main
+
+# Specify the desired Python version
+PYTHON_VERSION = 3.10.15
 
 # Virtual environment settings
 VENV_METHOD = venv  # Change this to 'poetry', 'conda', or 'uv' as needed
@@ -11,10 +14,12 @@ VENV_BIN := $(VENV_NAME)/bin
 VENV_PIP := $(VENV_NAME)/bin/pip
 CONFIG_DIR := config
 
+
+
 # Combine all PHONY targets
 .PHONY: venv install update freeze activate deactivate list-packages clean dev-install format lint test help init_config init_project_structure
 
-SHELL := /bin/bash
+SHELL := /bin/zsh
 CONDA_BASE := /opt/anaconda3
 CONDA_ACTIVATE := source $(CONDA_BASE)/etc/profile.d/conda.sh
 
@@ -31,6 +36,7 @@ init_repo:
 
 # Sync with Github
 sync:
+	pyenv local $(PYTHON_VERSION)
 	@echo "Syncing with GitHub and updating packages..."
 	git pull origin $(BRANCH)
 	@if [ "$(strip $(VENV_METHOD))" = "venv" ]; then \
@@ -50,51 +56,51 @@ sync:
 
 # Push to GitHub
 push:
-	git pull origin $(BRANCH)
 	@echo "Freezing current packages to requirements.txt..."
 	$(VENV_PIP) freeze > requirements.txt
 	git add .
 	git commit -m "Update analysis and data"
+	git pull origin $(BRANCH)
 	git push origin $(BRANCH)
 
 # Create and initialize virtual environment
 venv:
-	@echo "Creating virtual environment using $(VENV_METHOD)..."
+	@echo "Creating virtual environment using $(VENV_METHOD) with $(PYTHON_VERSION)..."
+	pyenv local $(PYTHON_VERSION)
 	@if [ "$(strip $(VENV_METHOD))" = "venv" ]; then \
 		$(PYTHON) -m venv $(VENV_NAME); \
-		$(VENV_PIP) install --upgrade pip; \
+		$(VENV_NAME)/bin/pip install --upgrade pip; \
 	elif [ "$(strip $(VENV_METHOD))" = "poetry" ]; then \
+		poetry env use $(PYTHON_VERSION); \
 		poetry config virtualenvs.in-project true; \
 		poetry init --no-interaction --name "project" --description "" --author "Junwei Lu" --license "MIT" --dependency "requests" --dev-dependency "pytest"; \
 	elif [ "$(strip $(VENV_METHOD))" = "conda" ]; then \
 		$(CONDA_ACTIVATE) && \
-		conda create --prefix $(VENV_NAME) $(PYTHON) -y; \
+		conda create --prefix $(VENV_NAME) $(PYTHON_VERSION) -y; \
 	elif [ "$(strip $(VENV_METHOD))" = "uv" ]; then \
 		uv init --no-cache --author-from Junwei Lu; \
 		uv install; \
 	else \
 		echo "Unknown VENV_METHOD: '$(VENV_METHOD)'"; \
 	fi
-	@echo "Virtual environment created using $(VENV_METHOD)!"
+	@echo "Virtual environment created using $(VENV_METHOD) with $(PYTHON_VERSION)!"
 
 # Install data science packages
 install:
+	pyenv local $(PYTHON_VERSION)
 	@echo "Installing packages for data science..."
 	@if [ "$(strip $(VENV_METHOD))" = "venv" ]; then \
 		source $(VENV_NAME)/bin/activate; \
-		$(VENV_PIP) install numpy pandas scikit-learn matplotlib seaborn yaml Box pathlib; \
-		$(VENV_PIP) install python-box pyyaml; \
+		$(VENV_PIP) install numpy pandas scikit-learn matplotlib seaborn jupyter; \
 	elif [ "$(strip $(VENV_METHOD))" = "poetry" ]; then \
-		poetry add numpy pandas scikit-learn matplotlib seaborn yaml Box pathlib; \
+		poetry add numpy pandas scikit-learn matplotlib seaborn jupyter; \
 		poetry add python-box pyyaml; \
 	elif [ "$(strip $(VENV_METHOD))" = "conda" ]; then \
 		$(CONDA_ACTIVATE) && \
-		conda install --prefix $(VENV_NAME) numpy pandas scikit-learn matplotlib seaborn yaml Box pathlib -y; \
-		conda install --prefix $(VENV_NAME) python-box pyyaml -y; \
+		conda install --prefix $(VENV_NAME) numpy pandas scikit-learn matplotlib seaborn jupyter -y; \
 	elif [ "$(strip $(VENV_METHOD))" = "uv" ]; then \
 		source $(VENV_NAME)/bin/activate; \
-		uv $(VENV_PIP) install numpy pandas scikit-learn matplotlib seaborn yaml Box pathlib; \
-		uv $(VENV_PIP) install python-box pyyaml; \
+		uv $(VENV_PIP) install numpy pandas scikit-learn matplotlib seaborn jupyter; \
 	fi
 	@echo "Packages installed using $(VENV_METHOD)!"
 
@@ -132,13 +138,13 @@ lock:
 activate:
 	@echo "To activate the virtual environment, run:"
 	@if [ "$(strip $(VENV_METHOD))" = "venv" ]; then \
-		@echo "source $(VENV_NAME)/bin/activate"; \
+		echo "source $(VENV_NAME)/bin/activate"; \
 	elif [ "$(strip $(VENV_METHOD))" = "poetry" ]; then \
 		poetry shell; \
 	elif [ "$(strip $(VENV_METHOD))" = "conda" ]; then \
 		$(CONDA_ACTIVATE) && conda activate $(VENV_NAME); \
 	elif [ "$(strip $(VENV_METHOD))" = "uv" ]; then \
-		@echo "source $(VENV_NAME)/bin/activate"; \
+		echo "source $(VENV_NAME)/bin/activate"; \
 	fi
 
 # Show deactivation command

@@ -1,5 +1,80 @@
 # Data Science Project Template
 
+## Quick Start Guide
+
+### 1. Initial Setup
+
+First, clone the repository and navigate to the project directory:
+
+```bash
+git clone <repository-url>
+cd Python_Project_Test
+```
+
+### 2. Virtual Environment Setup
+
+Create and activate a virtual environment:
+
+```bash
+# Create virtual environment
+make venv
+
+# Activate virtual environment (shown after running make venv)
+source venv/bin/activate  # For Unix/MacOS
+# or
+.\venv\Scripts\activate  # For Windows
+```
+
+### 3. Install Dependencies
+
+Install required packages:
+
+```bash
+make install
+```
+
+### 4. GitHub Integration
+
+Initialize repository and push to GitHub:
+
+```bash
+# Set your GitHub username and repo name in Makefile
+# Then run:
+make init
+
+# For subsequent pushes:
+make push
+```
+
+### 5. Sync with GitHub
+
+To pull latest changes and update packages:
+
+```bash
+make sync
+```
+
+### 6. Sample Analysis
+
+The project includes a sample dataset (`data/raw/data.csv`) and configuration (`src/config/config.yaml`) for running a random forest regression. The configuration file allows you to adjust model hyperparameters without changing the code.
+
+To run the analysis:
+
+1. Activate your virtual environment
+2. Open and run the Jupyter notebook in `sandbox/exploratory_data_analysis.ipynb`
+3. Use the model training utilities in `src/utils/model_trainer.py`
+
+Example configuration in `config.yaml`:
+```yaml
+model:
+  type: "random_forest"
+  parameters:
+    n_estimators: 100
+    max_depth: 10
+  cv_folds: 5
+  scoring: "roc_auc"
+```
+
 ## To Do
 
 - [ ] Add sample raw data (data_raw.csv eg) and sample preprocessing code
