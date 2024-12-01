@@ -1,5 +1,5 @@
 # Github variables
-REPO_NAME = Python-Project-Boston-Housing
+REPO_NAME = Python-Project-Template
 GITHUB_USER = junwei-lu
 BRANCH = main
 
